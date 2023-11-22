@@ -1,13 +1,12 @@
-const senhaJwt = require('../Jwt-key')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 const pool = require("../DB-connection");
-const { checkEmail } = require('../middleware/authentication');
+const { checkEmailRegistar, checkEmailUpdate } = require('../middleware/authentication');
 
 const newUser = async (req, res) => {
     const {nome, email, senha} = req.body
 
-    const validEmail = await checkEmail(email)
+    const validEmail = await checkEmailRegistar(email)
 
     if (validEmail) {
         return res.status(400).json({ mensagem: "Email já cadastrado em outra conta" })
@@ -21,14 +20,15 @@ const newUser = async (req, res) => {
         return res.status(201).json(user)
     
     } catch (error) {
-        return res.status(500).json({mensagem: error.message})
+        console.log(error.message);
+        return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
 }
 
 const login = async (req, res) => {
     const { senha, email } = req.body
 
-    const validEmail = await checkEmail(email)
+    const validEmail = await checkEmailRegistar(email)
 
     if (!validEmail) {
         return res.status(400).json({ mensagem: "Credenciais Invalidas" })
@@ -42,14 +42,14 @@ const login = async (req, res) => {
             return res.status(400).json({ message: 'Credenciais inválidas.' });
         }
 
-        const token = jwt.sign({ id: user.rows[0].id }, senhaJwt, { expiresIn: '2h' });
+        const token = jwt.sign({ id: user.rows[0].id }, process.env.CHAVE_SECRETA, { expiresIn: '2h' });
 
         const { senha: _, ...usuario } = user.rows[0];
 
         return res.status(201).json({ usuario, token });
 
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(500).json({ mensagem: "Erro interno do servidor" });
     }
 };
 
@@ -57,7 +57,7 @@ const updateUser = async (req, res) => {
     const {nome, email, senha} = req.body
     const userId = req.user[0].id
 
-    const validEmail = await checkEmail(email)
+    const validEmail = await checkEmailUpdate(email, userId)
 
     if (validEmail) {
         return res.status(400).json({ mensagem: "Email já cadastrado em outra conta" })
@@ -70,7 +70,8 @@ const updateUser = async (req, res) => {
         return res.status(204).json()
 
     } catch (error) {
-        return res.status(500).json({menssage: 'Deu ruim'})
+        console.log(error.message);
+        return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
 }
 
@@ -79,7 +80,7 @@ const userProfile = (req, res) => {
         const { senha: _, ...userProfile } = req.user[0];
         return res.status(200).json(userProfile)
     } catch (error) {
-        return res.status(500).json(error.message)
+        return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
 }
 

@@ -7,12 +7,12 @@ const { authenticationUser } = require('./middleware/token')
 const { registerTransaction, listTransaction, deleteTransaction, detailTransaction, extractTransaction, updateTransaction } = require('./controllers/transactions')
 const { list_categories } = require('./controllers/categories')
 
-routes.post('/usuario', validateEmail, registerAndUpdateUser, newUser) 
-routes.post('/login', validateEmail, datasLogin, login) 
+routes.post('/usuario', registerAndUpdateUser, validateEmail,  newUser) 
+routes.post('/login', datasLogin, validateEmail,  login) 
 
 routes.use(authenticationUser) 
 
-routes.put('/usuario', validateEmail, registerAndUpdateUser, updateUser) 
+routes.put('/usuario',registerAndUpdateUser, validateEmail,  updateUser) 
 routes.post('/transacao', registerOrUpdateTransaction, registerTransaction) 
 routes.get('/transacao', listTransaction) 
 routes.get('/usuario', userProfile) 

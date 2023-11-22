@@ -6,22 +6,25 @@ const registerTransaction = async (req, res) => {
   const userId = req.user[0].id
 
   if (tipo != 'saida' && tipo != 'entrada') {
-    return res.status(400).json({ mensagem: 'tipo de transacao inválida' })
+    return res.status(400).json({ mensagem: 'Tipo de transação inválida' })
   }
 
   if (categoria_id > 17 || categoria_id < 1) {
-    return res.status(400).json({ message: 'categoria inválida' })
+    return res.status(400).json({ messagem: 'Categoria inválida' })
   }
 
   try {
+    const categoria = await pool.query('select * from categorias where id = $1', [categoria_id])
+
     const query =
       'insert into transacoes (tipo, descricao, valor, data, categoria_id, usuario_id) values ($1, $2, $3, $4, $5, $6) returning *'
     const params = [tipo, descricao, valor, data, categoria_id, userId]
     const result = await pool.query(query, params)
 
-    return res.status(201).json(result.rows[0])
+    return res.status(201).json({...result.rows[0], categoria_nome: categoria.rows[0].descricao})
+
   } catch (error) {
-    return res.status(500).json({ message: error.message })
+    return res.status(500).json({ mensagem: "Erro interno do servidor" })
   }
 }
 
@@ -39,7 +42,7 @@ const deleteTransaction = async (req, res) => {
 
     return res.status(204).json()
   } catch (error) {
-    return res.status(500).json({ error: error.message })
+    return res.status(500).json({ mensagem: "Erro interno do servidor" })
   }
 }
 
@@ -59,7 +62,7 @@ const detailTransaction = async (req, res) => {
     }
     return res.status(200).json(result.rows[0])
   } catch (error) {
-    return res.status(500).json({ error: error.message })
+    return res.status(500).json({ mensagem: "Erro interno do servidor" })
   }
 };
 
@@ -92,7 +95,7 @@ const listTransaction = async (req, res) => {
     const result = await pool.query(query, params)
     return res.status(200).json(result.rows)    
   } catch (error) {
-      return res.status(500).json({ error: error.message })
+      return res.status(500).json({ mensagem: "Erro interno do servidor" })
   }
 };
 
@@ -119,16 +122,16 @@ const extractTransaction = async (req, res) => {
       }
 
       for(item of entrada){
-        somaEntrada += item.valor
+        somaEntrada += Number(item.valor)
       }
       for(item of saida){
-        somaSaida += item.valor
+        somaSaida += Number(item.valor)
       }
 
       return res.status(200).json({entrada: somaEntrada, saida: somaSaida})
      
   } catch (error) {
-      return res.status(500).json({ error: error.message })
+      return res.status(500).json({ mensagem: "Erro interno do servidor" })
   }
 };
 
@@ -159,7 +162,7 @@ const updateTransaction = async (req, res) => {
     return res.status(204).json()
     
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json({ mensagem: "Erro interno do servidor" })
   }
 }
 
