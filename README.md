@@ -29,23 +29,16 @@ Olá, visitante. Que bom ter você aqui. Esta é a RESTful API desenvolvida por 
 ### Como baixar e rodas o projeto:
 
  1. Para baixar e utilizar, você precisará ter em sua máquina o [Node.js](https://nodejs.org/en) e algum programa como o [Insomnia](https://insomnia.rest/download) para testar todas as requisições.
- 2. Você precisará clonar este repositório utilizando o comando: `git clone git@github.com:EmerSormany/Api-Sistema-Bancario.git`.
- 3. Após baixados os arquivos, você deverá abrir o terminal no diretório *Api-Administracao-Financeira* e digitar o comando `npm install` para instalar as dependências do projeto.
- 4. Após instaladas as bibliotecas e ainda no mesmo diretório, você deverá digitar o comando `npm run dev` no terminal ou abrir o terminal na pasta *SRC* e digitar o comando `node index.js`.
+ 2. Você precisará criar o banco de dados local na sua máquina e criar as tabelas com as querys disponíveis no arquivo *dump.sql*.
+ 3. Você precisará clonar este repositório utilizando o comando: `git clone git@github.com:EmerSormany/Api-Sistema-Bancario.git`.
+ 4. Após baixados os arquivos, você deverá abrir o terminal no diretório *Api-Administracao-Financeira* e digitar o comando `npm install` para instalar as dependências do projeto.
+ 5. Você precisará criar o arquivo *.env* e colocar suas variáveis de ambiente seguindo o modelo do arquivo *.env_example*.
+ 6. Após configurado o banco de dados, as variáveeis de ambiente e instaladas as bibliotecas, ainda no diretório *Api-Administracao-Financeira*, você deverá digitar o comando `npm run dev` no terminal ou abrir o terminal na pasta *SRC* e digitar o comando `node index.js`.
 
+# Endpoints
+### Cadastrar Usuário
 
-
-
-
-
-
-
-
-
----------------<>-------------
-Endpoint Cadastrar Usuário:
-
-A requisição deve conter no corpo do objeto 3 propriedades respeitando exatamente os seguintes nomes: nome, email e senha.
+A requisição deve conter no corpo do objeto 3 propriedades respeitando exatamente os seguintes nomes: *nome, email e senha*.
 
 Em caso de falha do nome, email ou senha não preenchidos, o endpoint irá retornar status code 400 e um objeto contendo uma mensagem indicando qual campo permanece vazio no corpo da resposta.
 
@@ -53,8 +46,7 @@ Para o email, o endpoint verificará se está dentro dos padrões, por meio de l
 
 Em caso de sucesso, o endpoint irá criar um hash utilizando a biblioteca bcrypt. Em seguida, registrará na tabela de usuários os dados do usuário com a senha criptografada. O retorno será status code 201 e um objeto contendo os dados do usuário cadastrado, exceto a senha.
 
----------------<>-------------
-Endpoint Login:
+### Login
 
 A requisição deve conter no corpo do objeto 2 propriedades respeitando exatamente os seguintes nomes: email e senha.
 
@@ -66,7 +58,7 @@ Posteriormente, ele utilizará o método compare da biblioteca bcrypt para compa
 
 Em caso de sucesso em todas as validações, o endpoint irá gerar o token com o método sign da biblioteca jsonwebtoken. Retornará status code 201 com um objeto contendo 2 propriedades: os dados do usuário logado, excluindo a senha; e o token gerado, válido por 2 horas. Após esse período, o usuário precisará realizar um novo login.
 
----------------<>-------------
+### ---------------<>-------------
 
 Apenas os endpoints de Cadastrar Usuário e Login são acessados sem a propriedade Bearer Token no cabeçalho da requisição; os demais precisarão do token gerado no endpoint de login.
 
@@ -74,15 +66,14 @@ Caso não seja enviado o token, os endpoints retornarão status code 401 com uma
 
 Em caso de token incorreto, os endpoints retornarão status code 500 com uma mensagem de erro interno do servidor no corpo da resposta.
 
----------------<>-------------
-Endpoint Detalhar Usuário:
+### ---------------<>-------------
+### Detalhar Usuário
 
 A requisição precisa apenas conter o Bearer Token no cabeçalho.
 
 Em caso de sucesso na requisição, o endpoint irá retornar status code 200 e os dados do usuário logado, exceto o hash da senha, no corpo da resposta.
 
----------------<>-------------
-Endpoint Atualizar Usuário:
+### Atualizar Usuário
 
 É necessário enviar o Bearer Token no cabeçalho da requisição.
 
@@ -96,15 +87,13 @@ Também verificará se o email já está cadastrado em outra conta. Caso o encon
 
 Em caso de sucesso em todas as validações, o endpoint criará um novo hash com a biblioteca bcrypt utilizando a nova senha fornecida. Em seguida, atualizará os dados do usuário logado na tabela de usuários, não retornando nada no corpo da resposta, apenas o código de sucesso 204.
 
----------------<>-------------
-Endpoint de Listar Categorias:
+### Listar Categorias
 
 A requisição precisa apenas conter o Bearer Token no header.
 
 Em caso de sucesso na requisição, o endpoint retornará status code 200 e um array de objetos, no qual cada objeto conterá o ID e a descrição da categoria no corpo da resposta.
 
----------------<>-------------
-Endpoint de Listar Transações:
+### Listar Transações
 
 A requisição precisa apenas conter o Bearer Token no header.
 
@@ -114,8 +103,7 @@ As transações somente serão exibidas se estiverem associadas ao usuário loga
 
 É possível incluir um parâmetro de rota do tipo query com nome e "filtro". O parâmetro é um array e será utilizado para filtrar as transações pela coluna descricao, que será retornado dentro do objeto como "categoria_nome". O filtro pode ser utilizado caso o usuário queira saber quais as transações ele tem com a categoria informada
 
----------------<>-------------
-Endpoint de Detalhar uma Transação:
+### Detalhar uma Transação
 
 A requisição precisa conter o Bearer Token no cabeçalho e, no parâmetro de rota do endpoint, o ID da transação. Exemplo: http://localhost:3000/transacao/7.
 
@@ -123,8 +111,7 @@ O usuário conseguirá acessar apenas as transações associadas ao seu ID. Se t
 
 Em caso de sucesso, a resposta será o status code 200 e um objeto no corpo contendo as propriedades de ID, descricao, valor, data, categoria_id, usuario_id, tipo e categoria_nome.
 
----------------<>-------------
-Endpoint Cadastrar Transação:
+### Cadastrar Transação
 
 A requisição precisa conter o Bearer Token no cabeçalho e, no corpo, um objeto contendo as propriedades: descricão, valor, data, categoria_id e tipo.
 
@@ -137,8 +124,7 @@ A propriedade categoria_id indica a categoria à qual a transação pertence. Po
 Em caso de sucesso em todas as validações, o endpoint retornará o status code 201 e um objeto no corpo da resposta contendo as propriedades: id, descricão, valor, data, categoria_id, usuario_id, tipo e categoria_nome.
 
 
----------------<>-------------
-Endpoint Atualizar Transação:
+### Atualizar Transação
 
 A requisição precisa conter o Bearer Token no cabeçalho e o ID da transação no parâmetro de rota, por exemplo: http://localhost:3000/transacao/19. Além disso, o corpo da requisição deve conter as propriedades descricão, valor, data, categoria_id e tipo.
 
@@ -156,8 +142,7 @@ A propriedade data precisa ter o formato dia/mês/ano - hora:minuto, se você qu
 
 Se todas as validações forem obedecidas, o retorno da API será o status code 204, não contendo nada no corpo da resposta, e a atualização será feita no banco de dados.
 
----------------<>-------------
-Endpoint Deletar Transação:
+### Deletar Transação
 
 A requisição precisa conter o Bearer Token no cabeçalho e o ID da transação no parâmetro de rota do endpoint.
 
@@ -167,8 +152,7 @@ Se o ID da transação for enviado com um valor que não seja numérico, o retor
 
 Em caso de sucesso em todas as validações, o sistema retornará o status code 204, sem mensagem no corpo da resposta.
 
----------------<>-------------
-Endpoint Obter Extrato de Transações:
+### Obter Extrato de Transações
 
 A requisição precisa conter apenas o Bearer Token no cabeçalho.
 
