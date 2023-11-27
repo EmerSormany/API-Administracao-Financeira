@@ -38,66 +38,93 @@ Olá, visitante. Que bom ter você aqui. Esta é a RESTful API desenvolvida por 
 # Endpoints
 ### Cadastrar Usuário
 
-A requisição deve conter no corpo do objeto 3 propriedades respeitando exatamente os seguintes nomes: *nome, email e senha*.
+O endpoint será **POST** `http://localhost:3000/usuario`.
 
-Em caso de falha do nome, email ou senha não preenchidos, o endpoint irá retornar status code 400 e um objeto contendo uma mensagem indicando qual campo permanece vazio no corpo da resposta.
+A requisição deve conter no corpo do objeto 3 propriedades respeitando exatamente os seguintes nomes: *nome, email* e *senha*.
+[Foto do exemplo do cadastro]( )
 
-Para o email, o endpoint verificará se está dentro dos padrões, por meio de lógica implementada com o middleware validateEmail. Retornará status code 400 e um objeto contendo uma mensagem de "Email inválido" no corpo da resposta ou permitirá a passagem para o próximo passo.
+Em caso de falha de alguma das propriedades nome, email ou senha não preenchidos, o endpoint irá retornar *status code 400* e um objeto, no corpo da resposta, contendo uma mensagem indicando qual propriedade permanece vazia.
+[Foto do exemplo do cadastro SEM NOME]( )
 
-Em caso de sucesso, o endpoint irá criar um hash utilizando a biblioteca bcrypt. Em seguida, registrará na tabela de usuários os dados do usuário com a senha criptografada. O retorno será status code 201 e um objeto contendo os dados do usuário cadastrado, exceto a senha.
+Para o email, o endpoint verificará se está dentro dos padrões, por meio de lógica implementada com o middleware validateEmail. Retornará *status code 400* e um objeto contendo uma mensagem de *"Email inválido"* no corpo da resposta ou permitirá a passagem para o próximo passo.
+[Foto de exemplo de Email Inválido]( )
+
+Em caso de sucesso, o endpoint irá criptografar a senha utilizando a biblioteca *bcrypt*. Em seguida, registrará na tabela de usuários os dados do usuário com a senha criptografada. O retorno será *status code 201* e um objeto contendo os dados do usuário cadastrado, exceto a senha.
+[Foto de exemplo de SUcesso de Cadastro]( )
 
 ### Login
 
-A requisição deve conter no corpo do objeto 2 propriedades respeitando exatamente os seguintes nomes: email e senha.
+O endpoint será **POST** `http://localhost:3000/login`.
 
-O endpoint irá verificar se os campos estão preenchidos e retornará status code 400 com uma mensagem indicando qual campo está vazio no corpo da resposta, caso algum não seja preenchido.
+A requisição deve conter no corpo do objeto 2 propriedades respeitando exatamente os seguintes nomes: *email* e *senha*.
 
-Em seguida, o endpoint verificará se existe usuário para o email enviado. Caso não encontre o email, retornará status code 400 com um objeto contendo a mensagem de credenciais inválidas no corpo da resposta.
+O endpoint irá verificar se as propriedades estão preenchidas e retornará *status code 400* com uma mensagem indicando qual pripredade está vazio no corpo da resposta, caso alguma não seja preenchida.
+[Foto de exemplo de Login sem Email]( )
 
-Posteriormente, ele utilizará o método compare da biblioteca bcrypt para comparar se o hash gerado é o mesmo cadastrado no banco. Caso não seja, retornará status code 400 com um objeto contendo a mensagem de credenciais inválidas no corpo da resposta.
+Em seguida, o endpoint verificará se existe usuário para o email enviado. Caso não encontre o email, retornará *status code 400* com um objeto contendo a mensagem de *credenciais inválidas* no corpo da resposta.
+[Foto de Exemplo Email não Cadastrado]( )
+
+Posteriormente, ele utilizará o método compare da biblioteca bcrypt para comparar se o hash gerado é o mesmo cadastrado no banco. Caso não seja, retornará *status code 400* com um objeto contendo a mensagem de *credenciais inválidas* no corpo da resposta.
+[Foto de Exemplo Login com Senha Incorreta]( )
 
 Em caso de sucesso em todas as validações, o endpoint irá gerar o token com o método sign da biblioteca jsonwebtoken. Retornará status code 201 com um objeto contendo 2 propriedades: os dados do usuário logado, excluindo a senha; e o token gerado, válido por 2 horas. Após esse período, o usuário precisará realizar um novo login.
+[Foto de Exemplo Login Sucesso]( )
 
 ### ---------------<>-------------
 
-Apenas os endpoints de Cadastrar Usuário e Login são acessados sem a propriedade Bearer Token no cabeçalho da requisição; os demais precisarão do token gerado no endpoint de login.
+Apenas os endpoints de **Cadastrar Usuário** e **Login** são acessados sem a propriedade Bearer Token no cabeçalho da requisição; os demais precisarão do token gerado no endpoint de login.
 
-Caso não seja enviado o token, os endpoints retornarão status code 401 com uma mensagem de não autorizado no corpo da resposta.
+Caso não seja enviado o token, os endpoints retornarão *status code 401* com uma mensagem de não autorizado no corpo da resposta.
 
-Em caso de token incorreto, os endpoints retornarão status code 500 com uma mensagem de erro interno do servidor no corpo da resposta.
+Em caso de token incorreto, os endpoints retornarão *status code 500* com uma mensagem de erro interno do servidor no corpo da resposta.
 
 ### ---------------<>-------------
 ### Detalhar Usuário
 
+O endpoint será **GET** `http://localhost:3000/usuario`.
+
 A requisição precisa apenas conter o Bearer Token no cabeçalho.
 
 Em caso de sucesso na requisição, o endpoint irá retornar status code 200 e os dados do usuário logado, exceto o hash da senha, no corpo da resposta.
+[Foto de Exemplo Detalhar Usuário]()
 
 ### Atualizar Usuário
 
+O endpoint será **PUT** `http://localhost:3000/usuario`.
+
 É necessário enviar o Bearer Token no cabeçalho da requisição.
 
-A requisição deve conter no corpo do objeto 3 propriedades respeitando exatamente os seguintes nomes: nome, email e senha.
+A requisição deve conter no corpo do objeto 3 propriedades respeitando exatamente os seguintes nomes: *nome, email* e *senha*.
+[Foto de Exemplo Detalhar Usuário]()
 
-Em caso de falha no preenchimento do nome, email ou senha, o endpoint irá retornar status code 400 com um objeto contendo uma mensagem indicando qual campo permanece vazio no corpo da resposta.
+Em caso de falha no preenchimento do nome, email ou senha, o endpoint irá retornar *status code 400* com um objeto contendo uma mensagem indicando qual campo permanece vazio no corpo da resposta.
+[Foto de Exemplo Detalhar Usuário Sem Email]()
 
-Para o email, o endpoint verificará se está dentro dos padrões utilizando a lógica implementada no middleware validateEmail. Retornará status code 400 com um objeto contendo uma mensagem de email inválido no corpo da resposta ou seguirá para o próximo passo.
+Para o email, o endpoint verificará se está dentro dos padrões utilizando a lógica implementada no middleware validateEmail. Retornará *status code 400* com um objeto contendo uma mensagem de email inválido no corpo da resposta ou seguirá para o próximo passo.
+[Foto de Exemplo Detalhar Usuário Email Inválido]()
 
-Também verificará se o email já está cadastrado em outra conta. Caso o encontre, retornará status code 400 com uma mensagem de email já cadastrado no corpo da resposta ou seguirá para o próximo passo.
+Também verificará se o email já está cadastrado em outra conta. Caso o encontre, retornará *status code 400* com uma mensagem de email já cadastrado no corpo da resposta ou seguirá para o próximo passo.
+[Foto de Exemplo Detalhar Usuário Email Inválido]()
 
-Em caso de sucesso em todas as validações, o endpoint criará um novo hash com a biblioteca bcrypt utilizando a nova senha fornecida. Em seguida, atualizará os dados do usuário logado na tabela de usuários, não retornando nada no corpo da resposta, apenas o código de sucesso 204.
+Em caso de sucesso em todas as validações, o endpoint criará um novo hash com a biblioteca *bcrypt* utilizando a nova senha fornecida. Em seguida, atualizará os dados do usuário logado na tabela de *usuários*, não retornando nada no corpo da resposta, apenas o *status code 204*.
+[Foto de Exemplo Detalhar Usuário Sucesso]()
 
 ### Listar Categorias
 
+O endpoint será **GET** `http://localhost:3000/categoria`.
+
 A requisição precisa apenas conter o Bearer Token no header.
 
-Em caso de sucesso na requisição, o endpoint retornará status code 200 e um array de objetos, no qual cada objeto conterá o ID e a descrição da categoria no corpo da resposta.
+Em caso de sucesso na requisição, o endpoint retornará *status code 200* e um array de objetos, no qual cada objeto conterá o *ID* e a *descrição* da categoria no corpo da resposta.
+[Foto de Exemplo Listas Categoria]()
 
 ### Listar Transações
 
+O endpoint será **GET** `http://localhost:3000/transacao`.
+
 A requisição precisa apenas conter o Bearer Token no header.
 
-O endpoint irá retornar status code 200 e, no corpo da resposta, um array com as transações, sendo cada uma um objeto contendo as propriedades de id, descricao, valor, data, categoria_id, usuario_id, tipo, categoria_nome.
+O endpoint irá retornar *status code 200* e, no corpo da resposta, um array com as transações, sendo cada uma um objeto contendo as propriedades de *id*, *descricao*, *valor*, *data*, *categoria_id*, *usuario_id*, *tipo*, *categoria_nome*.
 
 As transações somente serão exibidas se estiverem associadas ao usuário logado, caso não haja nenhuma transação associada ao id do usuário logado, não será exibida nenhuma transação, apenas status code 200 e array vazio no corpo da resposta.
 
