@@ -20,7 +20,6 @@ const newUser = async (req, res) => {
         return res.status(201).json(user)
     
     } catch (error) {
-        console.log(error.message);
         return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
 }
@@ -29,22 +28,20 @@ const login = async (req, res) => {
     const { senha, email } = req.body
 
     const validEmail = await checkEmailRegistar(email)
-
     if (!validEmail) {
         return res.status(400).json({ mensagem: "Credenciais Invalidas" })
     }
 
     try {
-        const user = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
-        const correctPass = await bcrypt.compare(senha, user.rows[0].senha);
+        const correctPass = await bcrypt.compare(senha, validEmail.senha);
 
         if (!correctPass) {
-            return res.status(400).json({ message: 'Credenciais inválidas.' });
+            return res.status(400).json({ mensagem: 'Credenciais inválidas.' });
         }
 
-        const token = jwt.sign({ id: user.rows[0].id }, process.env.CHAVE_SECRETA, { expiresIn: '2h' });
+        const token = jwt.sign({ id: validEmail.id }, process.env.CHAVE_SECRETA, { expiresIn: '2h' });
 
-        const { senha: _, ...usuario } = user.rows[0];
+        const { senha: _, ...usuario } = validEmail;
 
         return res.status(201).json({ usuario, token });
 
@@ -70,7 +67,6 @@ const updateUser = async (req, res) => {
         return res.status(204).json()
 
     } catch (error) {
-        console.log(error.message);
         return res.status(500).json({ mensagem: "Erro interno do servidor" })
     }
 }

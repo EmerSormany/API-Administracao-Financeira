@@ -9,6 +9,10 @@ const registerTransaction = async (req, res) => {
     return res.status(400).json({ mensagem: 'Tipo de transação inválida' })
   }
 
+  if (!Number(categoria_id)) {
+    return res.status(400).json({ messagem: 'Categoria inválida' })
+  }
+
   if (categoria_id > 17 || categoria_id < 1) {
     return res.status(400).json({ messagem: 'Categoria inválida' })
   }
@@ -55,10 +59,10 @@ const detailTransaction = async (req, res) => {
     transacoes.usuario_id, transacoes.tipo, categorias.descricao as categoria_nome from transacoes
     inner join categorias on transacoes.categoria_id = categorias.id where 
     transacoes.usuario_id = $1 and transacoes.id = $2`
-    const params = [userId, id ]
+    const params = [userId, id]
     const result = await pool.query(query, params)
     if(result.rowCount < 1){
-      return res.status(404).json({ menssagem: 'Transação não encontrada'})
+      return res.status(404).json({ mensagem: 'Transação não encontrada'})
     }
     return res.status(200).json(result.rows[0])
   } catch (error) {
@@ -142,13 +146,14 @@ const updateTransaction = async (req, res) => {
 
 
   if (tipo != 'saida' && tipo != 'entrada') {
-    return res.status(400).json({ mensagem: 'tipo de transacao inválida' });
+    return res.status(400).json({ mensagem: 'Tipo de transação inválida' });
   }
-
+  if (!Number(categoria_id)) {
+    return res.status(400).json({ messagem: 'Categoria inválida' })
+  }
   if (categoria_id > 17 || categoria_id < 1) {
-    return res.status(400).json({ message: 'categoria inválida' });
+    return res.status(400).json({ mensagem: 'Categoria inválida' });
   }
-
 
   try {
     const query = 'update transacoes set descricao = $1, valor = $2, data = $3, categoria_id = $4, tipo = $5 where id = $6 and usuario_id = $7'
@@ -156,12 +161,13 @@ const updateTransaction = async (req, res) => {
     const result = await pool.query(query, params)
 
     if (result.rowCount < 1) {
-      return res.status(404).json({mensage: 'Transacao não encontrada'})
+      return res.status(404).json({mensagem: 'Transação não encontrada'})
     }
 
     return res.status(204).json()
     
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ mensagem: "Erro interno do servidor" })
   }
 }

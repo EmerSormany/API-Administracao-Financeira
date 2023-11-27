@@ -4,7 +4,7 @@ const checkEmailRegistar = async (email) => {
   try {
     const emailFound = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email])
     if (emailFound.rowCount >= 1) {
-      return true
+      return emailFound.rows[0]
     }
     return false
   } catch (error) {
@@ -74,19 +74,13 @@ const registerOrUpdateTransaction = (req, res, next) => {
 
 const validateEmail = (req, res, next) => {
   const {email} = req.body
-  try {
-  
-      let validateAtSign = email.indexOf('@')
-      const validatePoint = email.lastIndexOf('.')
-      if (validateAtSign == -1 || validateAtSign == 0 || validateAtSign+1 == email.length || email.slice(validateAtSign+1, validateAtSign+2) === '.' 
-      || email.includes(' ') || validatePoint == email.length-1 || validatePoint < validateAtSign || email.includes(' ')) {
-        return res.status(400).json({ mensagem: "Email inválido" })
-      }
-
-      next()
-  } catch (error) {
-    return res.status(400).json({ mensagem: "Erro interno do servidor" })
-  }
+    let validateAtSign = email.indexOf('@')
+    const validatePoint = email.lastIndexOf('.')
+    if (validateAtSign == -1 || validateAtSign == 0 || validateAtSign+1 == email.length || email.slice(validateAtSign+1, validateAtSign+2) === '.' 
+    || email.includes(' ') || validatePoint == email.length-1 || validatePoint < validateAtSign || email.includes(' ')) {
+      return res.status(400).json({ mensagem: "Email inválido" })
+    }
+    next()
 }
 
 module.exports = {
