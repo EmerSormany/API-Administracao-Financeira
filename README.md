@@ -63,7 +63,7 @@ O endpoint irá verificar se as propriedades estão preenchidas e retornará *st
 <img src="/prints/loginSemEmail.png">
 
 Em seguida, o endpoint verificará se existe usuário para o email enviado. Caso não encontre o email, retornará *status code 400* com um objeto contendo a mensagem de *credenciais inválidas* no corpo da resposta.
-[Foto de Exemplo Email não Cadastrado]( )
+<img src="/prints/loginNaoExiste.png">
 
 Posteriormente, ele utilizará o método compare da biblioteca bcrypt para comparar se o hash gerado é o mesmo cadastrado no banco. Caso não seja, retornará *status code 400* com um objeto contendo a mensagem de *credenciais inválidas* no corpo da resposta.
 <img src="/prints/loginSenhaIncorreta.png">
