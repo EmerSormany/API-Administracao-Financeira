@@ -219,4 +219,4 @@ A requisição precisa conter apenas o Bearer Token no cabeçalho.
 Em caso de sucesso em todas as validações, o sistema retornará o *status code 200* e um objeto no corpo da resposta contendo 2 propriedades: uma representando o valor total das transações cadastradas como **entrada** e a outra representando o valor total das transações cadastradas como **saída**.
 <img src="/prints/obterExtrato.png">
 
-Muito obrigado por ter chegado até aqui!! Entre em contato [comigo](www.linkedin.com/in/emersonsormany) ou com [Érico](https://github.com/dERICOd). :cowboy_hat_face:
+Muito obrigado por ter chegado até aqui!! Entre em contato [comigo](https://www.linkedin.com/in/emersonsormany) ou com [Érico](https://github.com/dERICOd). :cowboy_hat_face:
