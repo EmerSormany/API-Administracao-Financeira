@@ -125,62 +125,91 @@ O endpoint será **GET** `http://localhost:3000/transacao`.
 A requisição precisa apenas conter o Bearer Token no header.
 
 O endpoint irá retornar *status code 200* e, no corpo da resposta, um array com as transações, sendo cada uma um objeto contendo as propriedades de *id*, *descricao*, *valor*, *data*, *categoria_id*, *usuario_id*, *tipo*, *categoria_nome*.
+[Foto de Exemplo Listas Transações]()
 
-As transações somente serão exibidas se estiverem associadas ao usuário logado, caso não haja nenhuma transação associada ao id do usuário logado, não será exibida nenhuma transação, apenas status code 200 e array vazio no corpo da resposta.
+As transações somente serão exibidas se estiverem associadas ao usuário logado, caso não haja nenhuma transação associada ao id do usuário logado, não será exibida nenhuma transação, apenas *status code 200* e array vazio no corpo da resposta.
+[Foto de Exemplo Listas Vazio]()
 
-É possível incluir um parâmetro de rota do tipo query com nome e "filtro". O parâmetro é um array e será utilizado para filtrar as transações pela coluna descricao, que será retornado dentro do objeto como "categoria_nome". O filtro pode ser utilizado caso o usuário queira saber quais as transações ele tem com a categoria informada
+É possível incluir um parâmetro de rota do tipo query com nome e "filtro". O parâmetro é um array e será utilizado para filtrar as transações pela coluna descricao, que será retornado dentro do objeto como "categoria_nome". O filtro pode ser utilizado caso o usuário queira saber quais as transações ele tem com a categoria informada.
+[Foto de Exemplo Listas Filtro]()
 
 ### Detalhar uma Transação
 
-A requisição precisa conter o Bearer Token no cabeçalho e, no parâmetro de rota do endpoint, o ID da transação. Exemplo: http://localhost:3000/transacao/7.
+O endpoint será **GET** `http://localhost:3000/transacao/:id`.
 
-O usuário conseguirá acessar apenas as transações associadas ao seu ID. Se tentar acessar uma transação associada ao ID de outro usuário ou que não exista no banco de dados, o endpoint retornará o status code 404 e um objeto no corpo da resposta contendo a mensagem de "transação não encontrada".
+A requisição precisa conter o Bearer Token no cabeçalho e, no parâmetro de rota do endpoint, o valor numérico correspondente ao *ID* da transação, que substituirá a parcela *:id* do endpoint.
 
-Em caso de sucesso, a resposta será o status code 200 e um objeto no corpo contendo as propriedades de ID, descricao, valor, data, categoria_id, usuario_id, tipo e categoria_nome.
+O usuário conseguirá acessar apenas as transações associadas ao seu ID. Se tentar acessar uma transação associada ao ID de outro usuário ou que não exista no banco de dados, o endpoint retornará o *status code 404* e um objeto no corpo da resposta contendo a mensagem de "transação não encontrada".
+[Foto de Exemplo Transação com id Inválido]()
+
+Em caso de sucesso, a resposta será o *status code 200* e um objeto no corpo contendo as propriedades de *ID, descricao, valor, data, categoria_id, usuario_id, tipo* e *categoria_nome*.
+[Foto de Exemplo Transação Scesso]()
 
 ### Cadastrar Transação
 
-A requisição precisa conter o Bearer Token no cabeçalho e, no corpo, um objeto contendo as propriedades: descricão, valor, data, categoria_id e tipo.
+O endpoint será **POST** `http://localhost:3000/transacao`.
 
-Caso alguma propriedade não seja preenchida, o endpoint retornará o status code 400 e um objeto no corpo contendo a mensagem indicando qual propriedade não está sendo preenchida.
+A requisição precisa conter o Bearer Token no cabeçalho e, no corpo, um objeto contendo as propriedades: *descricão, valor, data, categoria_id* e *tipo*.
+[Foto de Exemplo Cadastrar Transação]()
 
-A propriedade tipo deve ter o valor de "saida" ou "entrada". No sistema, ela indica se a transação é um valor acrescido ou subtraído do total da conta. Se for enviada uma requisição com um valor diferente para a propriedade tipo, o endpoint retornará o status code 400 e um objeto no corpo contendo a mensagem "Tipo de transação inválido".
+Caso alguma propriedade não seja preenchida, o endpoint retornará o *status code 400* e um objeto no corpo contendo a mensagem indicando qual propriedade não está sendo preenchida.
+[Foto de Exemplo Cadastrar Transação Sem Valor]()
 
-A propriedade categoria_id indica a categoria à qual a transação pertence. Portanto, deve ter um valor numérico entre 1 e 17, que correspondem às categorias cadastradas. Se a requisição for enviada com um valor diferente, o endpoint retornará o status code 400 e um objeto no corpo da resposta contendo a mensagem "Categoria inválida".
+A propriedade *tipo* deve ter o valor de **saida** ou **entrada**. No sistema, ela indica se a transação é um valor acrescido ou subtraído do total da conta. Se for enviada uma requisição com um valor diferente para a propriedade tipo, o endpoint retornará o status code 400 e um objeto no corpo contendo a mensagem "Tipo de transação inválido".
+[Foto de Exemplo Cadastrar Transação Tipo Errado]()
 
-Em caso de sucesso em todas as validações, o endpoint retornará o status code 201 e um objeto no corpo da resposta contendo as propriedades: id, descricão, valor, data, categoria_id, usuario_id, tipo e categoria_nome.
+A propriedade *categoria_id* indica a categoria à qual a transação pertence. Portanto, deve ter um valor **numérico** entre *1* e *17*, que correspondem às categorias cadastradas. Se a requisição for enviada com um valor diferente, o endpoint retornará o *status code 400* e um objeto no corpo da resposta contendo a mensagem "Categoria inválida".
+[Foto de Exemplo Cadastrar Transação Categoria Inválida]()
+
+Em caso de sucesso em todas as validações, o endpoint retornará o *status code 201* e um objeto no corpo da resposta contendo as propriedades: *id, descricão, valor, data, categoria_id, usuario_id, tipo* e *categoria_nome*.
+[Foto de Exemplo Cadastrar Transação Sucesso]()
 
 
 ### Atualizar Transação
 
-A requisição precisa conter o Bearer Token no cabeçalho e o ID da transação no parâmetro de rota, por exemplo: http://localhost:3000/transacao/19. Além disso, o corpo da requisição deve conter as propriedades descricão, valor, data, categoria_id e tipo.
+O endpoint será **PUT** `http://localhost:3000/transacao/:id`.
 
-Se não for enviado um ID no parâmetro de rota, será retornado o status code 404 com a mensagem padrão HTTP: "Cannot PUT /transacao".
+A requisição precisa conter o Bearer Token no cabeçalho e, no parâmetro de rota do endpoint, o valor numérico correspondente ao *ID* da transação, que substituirá a parcela *:id* do endpoint. Além disso, o corpo da requisição deve conter as propriedades: *descricão, valor, data, categoria_id* e *tipo*.
 
-Se o ID da transação enviado no parâmetro de rota não existir no banco de dados ou pertencer a outro usuário, o endpoint retornará o status code 404 e um objeto no corpo da resposta contendo a mensagem "Transação não encontrada".
+Se não for enviado um *ID* no parâmetro de rota, será retornado o *status code 404* com a mensagem padrão HTTP: "Cannot PUT /transacao".
+[Foto de Exemplo Atualizar Transação Sem ID]()
 
-Caso alguma propriedade não seja preenchida, o endpoint retornará o status code 400 e um objeto no corpo contendo a mensagem indicando qual propriedade não está sendo preenchida.
+Se o *ID* da transação enviado no parâmetro de rota não existir no banco de dados ou pertencer a outro usuário, o endpoint retornará o *status code 404* e um objeto no corpo da resposta contendo a mensagem "Transação não encontrada".
+[Foto de Exemplo Atualizar Transação Com ID Inválido]()
 
-Assim como no endpoint de cadastrar transação, a propriedade categoria_id precisa ter um valor numérico entre 1 e 17. Se o valor for diferente, será retornado o status code 400 e um objeto no corpo da resposta contendo a mensagem "Categoria inválida".
+Caso alguma propriedade não seja preenchida, o endpoint retornará o *status code 400* e um objeto no corpo contendo a mensagem indicando qual propriedade não está sendo preenchida.
+[Foto de Exemplo Atualizar Transação Propriedade Vazia]()
 
-A propriedade tipo também precisa ter o valor "entrada" ou "saida". Caso contrário, será retornado o status code 400 e um objeto no corpo contendo a mensagem "Tipo de transação inválida".
+Assim como no endpoint de cadastrar transação, a propriedade categoria_id precisa ter um valor **numérico** entre *1* e *17*. Se o valor for diferente, será retornado o *status code 400* e um objeto no corpo da resposta contendo a mensagem "Categoria inválida".
 
-A propriedade data precisa ter o formato dia/mês/ano - hora:minuto, se você quiser resgistrar a hora e o minuto da transação, ou somente dia/mês/ano, nesse caso o banco de dados registrará a hora como 00:00:00. Se a requisição for enviada contendo uma palavra ou outro formato no valor da propriedade, o sistema retornará o status code 500 e um objeto no corpo da resposta com a mensagem de "Erro interno do servidor".
+A propriedade *tipo* também precisa ter o valor **entrada** ou **saida**. Caso contrário, será retornado o *status code 400* e um objeto no corpo contendo a mensagem "Tipo de transação inválida".
+
+A propriedade data precisa ter o formato **dia/mês/ano - hora:minuto**, se você quiser resgistrar a hora e o minuto da transação, ou somente **dia/mês/ano**, nesse caso o banco de dados registrará a hora como `00:00:00`. Se a requisição for enviada contendo uma palavra ou outro formato no valor da propriedade, o sistema retornará o *status code 500* e um objeto no corpo da resposta com a mensagem de "Erro interno do servidor".
+[Foto de Exemplo Atualizar Transação Data Errada]()
 
 Se todas as validações forem obedecidas, o retorno da API será o status code 204, não contendo nada no corpo da resposta, e a atualização será feita no banco de dados.
+[Foto de Exemplo Atualizar Transação Sucesso]()
 
 ### Deletar Transação
 
-A requisição precisa conter o Bearer Token no cabeçalho e o ID da transação no parâmetro de rota do endpoint.
+O endpoint será **DELETE** `http://localhost:3000/transacao/:id`.
 
-Se o ID da transação enviado não pertencer ao usuário logado ou não existir no banco de dados, o sistema retornará o status code 404 e um objeto no corpo contendo a mensagem "Transação não encontrada".
+A requisição precisa conter o Bearer Token no cabeçalho e, no parâmetro de rota do endpoint, o valor numérico correspondente ao *ID* da transação, que substituirá a parcela *:id* do endpoint.
 
-Se o ID da transação for enviado com um valor que não seja numérico, o retorno da API será o status code 500 e um objeto contendo a mensagem de "Erro interno do servidor" no corpo da resposta.
+Se o *ID* da transação enviado não pertencer ao usuário logado ou não existir no banco de dados, o sistema retornará o *status code 404* e um objeto no corpo contendo a mensagem "Transação não encontrada".
+[Foto de Exemplo Deletar Transação ID Inválido]()
+
+Se o ID da transação for enviado com um valor que não seja numérico, o retorno da API será o *status code 500* e um objeto contendo a mensagem de "Erro interno do servidor" no corpo da resposta.
+[Foto de Exemplo Deletar Transação ID Palavra]()
 
 Em caso de sucesso em todas as validações, o sistema retornará o status code 204, sem mensagem no corpo da resposta.
+[Foto de Exemplo Deletar Transação Sucesso]()
 
 ### Obter Extrato de Transações
 
+O endpoint será **GET** `http://localhost:3000/transacao/extrato`.
+
 A requisição precisa conter apenas o Bearer Token no cabeçalho.
 
-Em caso de sucesso em todas as validações, o sistema retornará o status code 200 e um objeto no corpo da resposta contendo 2 propriedades: uma representando o valor total das transações cadastradas como entrada e a outra representando o valor total das transações cadastradas como saída.
+Em caso de sucesso em todas as validações, o sistema retornará o *status code 200* e um objeto no corpo da resposta contendo 2 propriedades: uma representando o valor total das transações cadastradas como **entrada** e a outra representando o valor total das transações cadastradas como **saída**.
+[Foto de Exemplo Deletar Transação Sucesso]()
