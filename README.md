@@ -41,7 +41,7 @@ Olá, visitante. Que bom ter você aqui. Esta é a RESTful API desenvolvida por 
 O endpoint será **POST** `http://localhost:3000/usuario`.
 
 A requisição deve conter no corpo do objeto 3 propriedades respeitando exatamente os seguintes nomes: *nome, email* e *senha*.
-[Foto do exemplo do cadastro]( )
+[Foto do exemplo do cadastro](cadastro.png)
 
 Em caso de falha de alguma das propriedades nome, email ou senha não preenchidos, o endpoint irá retornar *status code 400* e um objeto, no corpo da resposta, contendo uma mensagem indicando qual propriedade permanece vazia.
 [Foto do exemplo do cadastro SEM NOME]( )
