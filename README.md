@@ -21,18 +21,19 @@ Olá, visitante. Que bom ter você aqui. Esta é a RESTful API desenvolvida por 
  * Linguagem Javascript;
  * Node.js;
  * Express.js para criar o servidor;
- * bcrypt;
- * dotenv;
- * jsonwebtoken;
- * pg.
+ * Bcrypt;
+ * Dotenv;
+ * Jsonwebtoken;
+ * Pg;
+ * PostgreSQL.
 
 ### Como baixar e rodas o projeto:
 
- 1. Para baixar e utilizar, você precisará ter em sua máquina o [Node.js](https://nodejs.org/en) e algum programa como o [Insomnia](https://insomnia.rest/download) para testar todas as requisições.
+ 1. Para baixar e utilizar, você precisará ter em sua máquina o [Node.js](https://nodejs.org/en), algum programa como o [Insomnia](https://insomnia.rest/download) para testar todas as requisições, [PostgreSQL](https://pgdocptbr.xyz/tutorial-install) e o [Beekeeper](https://github.com/beekeeper-studio/beekeeper-studio/releases/tag/v3.9.20) para executar as querys do arquivo *dump.sql*.
  2. Você precisará criar o banco de dados local na sua máquina e criar as tabelas com as querys disponíveis no arquivo *dump.sql*.
- 3. Você precisará clonar este repositório utilizando o comando: `git clone git@github.com:EmerSormany/Api-Sistema-Bancario.git`.
- 4. Após baixados os arquivos, você deverá abrir o terminal no diretório *Api-Administracao-Financeira* e digitar o comando `npm install` para instalar as dependências do projeto.
- 5. Você precisará criar o arquivo *.env* e colocar suas variáveis de ambiente seguindo o modelo do arquivo *.env_example*.
+ 3. Você precisará criar o arquivo *.env* e colocar suas variáveis de ambiente seguindo o modelo do arquivo *.env_example*.
+ 4. Você precisará clonar este repositório utilizando o comando: `git clone git@github.com:EmerSormany/Api-Sistema-Bancario.git`.
+ 5. Após baixados os arquivos, você deverá abrir o terminal no diretório *Api-Administracao-Financeira* e digitar o comando `npm install` para instalar as dependências do projeto.
  6. Após configurado o banco de dados, as variáveeis de ambiente e instaladas as bibliotecas, ainda no diretório *Api-Administracao-Financeira*, você deverá digitar o comando `npm run dev` no terminal ou abrir o terminal na pasta *SRC* e digitar o comando `node index.js`.
 
 # Endpoints
